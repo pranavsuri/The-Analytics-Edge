@@ -1,0 +1,292 @@
+# Stock Dynamics
+##### *Unit-1: Introduction to Analytics*
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
+```
+</br>
+
+A stock market is where buyers and sellers trade shares of a company, and is 
+one of the most popular ways for individuals and companies to invest money. 
+The size of the world stock market is now estimated to be in the trillions. 
+The largest stock market in the world is the New York Stock Exchange (NYSE), 
+located in New York City. About 2,800 companies are listed on the NYSE. In this 
+problem, we'll look at the monthly stock prices of five of these companies: 
+[IBM](http://www.ibm.com/), [General Electric - GE](http://www.ge.com/), 
+[Procter and Gamble](http://www.pg.com/), [Coca Cola](http://www.coca-cola.com/), 
+and [Boeing](http://www.boeing.com/). The data used in this problem comes from 
+[Infochimps](http://www.infochimps.com/).
+
+Download and read the following files into R, using the read.csv function: 
+[IBMStock.csv](https://courses.edx.org/c4x/MITx/15.071x_2/asset/IBMStock.csv), 
+[GEStock.csv](https://courses.edx.org/c4x/MITx/15.071x_2/asset/GEStock.csv), 
+[ProcterGambleStock.csv](https://courses.edx.org/c4x/MITx/15.071x_2/asset/ProcterGambleStock.csv), 
+[CocaColaStock.csv](https://courses.edx.org/c4x/MITx/15.071x_2/asset/CocaColaStock.csv), 
+and [BoeingStock.csv](https://courses.edx.org/c4x/MITx/15.071x_2/asset/BoeingStock.csv).
+Call the data frames "IBM", "GE", "ProcterGamble", "CocaCola", and "Boeing", 
+respectively. 
+```{r}
+IBM = read.csv("IBMStock.csv")
+GE = read.csv("GEStock.csv")
+ProcterGamble = read.csv("ProcterGambleStock.csv")
+CocaCola = read.csv("CocaColaStock.csv")
+Boeing = read.csv("BoeingStock.csv")
+```
+
+Each data frame has two variables, described as follows:
+
+- `Date`: the date of the stock price, always given as the first of the month.
+
+- `StockPrice`: the average stock price of the company in the given month. 
+
+In this problem, we'll take a look at how the stock dynamics of these companies
+have changed over time.
+
+----------
+
+#### Summary Statistics
+Before working with these data sets, we need to convert the dates into a format 
+that R can understand. Take a look at the structure of one of the datasets 
+using the str function. Right now, the date variable is stored as a factor. 
+We can convert this to a "Date" object in R by using the following five 
+commands (one for each data set):
+  
+```{R}
+IBM$Date = as.Date(IBM$Date, "%m/%d/%y")
+GE$Date = as.Date(GE$Date, "%m/%d/%y")
+CocaCola$Date = as.Date(CocaCola$Date, "%m/%d/%y")
+ProcterGamble$Date = as.Date(ProcterGamble$Date, "%m/%d/%y")
+Boeing$Date = as.Date(Boeing$Date, "%m/%d/%y")
+```
+
+The first argument to the `as.Date` function is the variable we want to convert, 
+and the second argument is the format of the Date variable. We can just 
+overwrite the original Date variable values with the output of this function. 
+Now, answer the following questions using the `str` and `summary` functions.  
+</br>
+
+##### 1.1 How many observations are there in each data set (all have the same number of observations)?
+```{r}
+nrow(IBM)
+```
+480 observations.  
+</br>
+   
+##### 1.2 What is the earliest year in our datasets?  
+```{r}
+min(IBM$Date)
+``` 
+</br>
+
+##### 1.3 What is the latest year in our datasets?
+```{r}
+max(IBM$Date)
+```
+</br>
+
+##### 1.4 What is the mean stock price of IBM over this time period?
+```{r}
+mean(IBM$StockPrice)
+```
+</br>
+
+##### 1.5 What is the minimum stock price of General Electric (GE) over this time period?
+```{r}
+min(GE$StockPrice)
+```
+</br>
+
+##### 1.6 What is the maximum stock price of Coca-Cola over this time period?
+```{r}
+max(CocaCola$StockPrice)
+```  
+</br>
+
+##### 1.7 What is the median stock price of Boeing over this time period?
+```{r}
+median(Boeing$StockPrice)
+```
+</br>
+
+##### 1.8 What is the standard deviation of the stock price of Procter & Gamble over this time period?
+```{r}
+sd(ProcterGamble$StockPrice)
+```
+</br>
+
+#### Visualizing Stock Dynamics
+Let's plot the stock prices to see if we can visualize trends in stock prices 
+during this time period. Using the plot function, plot the Date on the x-axis 
+and the StockPrice on the y-axis, for Coca-Cola.
+
+This plots our observations as points, but we would really like to see a line 
+instead, since this is a continuous time period. To do this, add the argument 
+`type="l"` to your plot command, and re-generate the plot (the character is 
+quotes is the letter l, for line). You should now see a line plot of the 
+Coca-Cola stock price.  
+
+```{r}
+plot(CocaCola$Date, CocaCola$StockPrice, type="l")
+```
+</br>
+
+##### 2.1 Around what year did Coca-Cola has its highest and lowest stock price in this time period?
+The above plot suggests that the highest was in 1973 and the lowest was in 1980.  
+</br>
+
+##### 2.2 Which stock dropped more in the year 2000, during the technology bubble burst?
+Now, let's add the line for Procter & Gamble too. You can add a line to a plot 
+in R by using the lines function instead of the plot function. Keeping the plot 
+for Coca-Cola open, type in your R console:
+
+```{r}
+plot(CocaCola$Date, CocaCola$StockPrice, type="l")
+lines(ProcterGamble$Date, ProcterGamble$StockPrice)
+```
+
+Unfortunately, it's hard to tell which line is which. Let's fix this by giving 
+each line a color. First, re-run the plot command for Coca-Cola, but add the 
+argument `col="red"`. You should see the plot for Coca-Cola show up again, but 
+this time in red. Now, let's add the Procter & Gamble line (using the lines 
+function like we did before), adding the argument `col="blue"`. You should now 
+see in your plot the Coca-Cola stock price in red, and the Procter & Gamble 
+stock price in blue.
+
+As an alternative to changing the colors, you could instead change the line 
+type of the Procter & Gamble line by adding the argument `lty=2`. This 
+will make the Procter & Gamble line dashed.
+
+```{r}
+plot(CocaCola$Date, CocaCola$StockPrice, type="l", col="red")
+lines(ProcterGamble$Date, ProcterGamble$StockPrice, col="blue")
+abline(v=as.Date(c("2000-03-01")), lwd=2)
+```
+
+**In March of 2000, the technology bubble burst, and a stock market crash** 
+**occurred. According to this plot, which company's stock dropped more?**
+Looking at the plot, around 2000, both stocks drop, but Procter and Gamble's
+stock drops more.  
+</br>
+
+##### 2.3 Around 1983, one of these stocks was going up, which one was it? Which stock generally had lower values?
+```{r}
+plot(CocaCola$Date, CocaCola$StockPrice, type="l", col="red")
+lines(ProcterGamble$Date, ProcterGamble$StockPrice, col="blue")
+abline(v=as.Date(c("1983-06-01")), lwd=2)
+```
+
+From the plot, it can be noted that Coca-Cola has a slightly upward trend 
+around 1983 but is generally lower than the Proctor Gamble stock.  
+</br>
+
+#### Visualizing Stock Dynamics: 1995-2005
+Let's take a look at how the stock prices changed from 1995-2005 for all five 
+companies. In your R console, start by typing the following plot command:
+
+```{r}
+plot(CocaCola$Date[301:432], CocaCola$StockPrice[301:432], 
+     type="l", col="red", ylim=c(0,210))
+```
+</br>
+This will plot the CocaCola stock prices from 1995 through 2005, which are the 
+observations numbered from 301 to 432. The additional argument, `ylim=c(0,210)`,
+makes the y-axis range from 0 to 210. This will allow us to see all of the 
+stock values when we add in the other companies.
+
+Now, use the lines function to add in the other four companies, remembering to 
+only plot the observations from 1995 to 2005, or `[301:432]`. You don't need 
+the "type" or "ylim" arguments for the lines function, but remember to make 
+each company a different color so that you can tell them apart. Some color 
+options are "red", "blue", "green", "purple", "orange", and "black". To see all 
+of the color options in R, type colors() in your R console.
+
+*Use this plot to answer all of the questions in this problem.*  
+</br>
+
+##### 3.1 Which stock fell the most right after the technology bubble burst in March 2000?
+```{r}
+plot(CocaCola$Date[301:432], CocaCola$StockPrice[301:432], 
+     type="l", col="red", ylim=c(0,210))
+lines(ProcterGamble$Date[301:432], ProcterGamble$StockPrice[301:432], col="blue")
+lines(IBM$Date[301:432], IBM$StockPrice[301:432], col="green")
+lines(GE$Date[301:432], GE$StockPrice[301:432], col="purple")
+lines(Boeing$Date[301:432], Boeing$StockPrice[301:432], col="orange")
+
+abline(v=as.Date(c("2000-03-01")), lwd=2)
+```
+</br>
+From this plot, it can been seen that the stock for General Electric falls 
+significantly more than the other stocks after the technology bubble burst.  
+</br>
+
+##### 3.2 Which stock reaches the highest value in the time period 1995-2005?
+From the plot, it is seen that IBM has the value value, around 1999.  
+</br>
+
+##### 3.3 Which companies saw a decreasing trend in their stock price during the economic crisis in Asia?
+In October of 1997, there was a global stock market crash that was caused by an 
+economic crisis in Asia. Comparing September 1997 to November 1997, which
+companies saw a decreasing trend in their stock price?
+
+```{r}
+plot(CocaCola$Date[301:432], CocaCola$StockPrice[301:432], 
+     type="l", col="red", ylim=c(0,210))
+lines(ProcterGamble$Date[301:432], ProcterGamble$StockPrice[301:432], col="blue")
+lines(IBM$Date[301:432], IBM$StockPrice[301:432], col="green")
+lines(GE$Date[301:432], GE$StockPrice[301:432], col="purple")
+lines(Boeing$Date[301:432], Boeing$StockPrice[301:432], col="orange")
+
+abline(v=as.Date(c("1997-09-01")), lwd=2)
+abline(v=as.Date(c("1997-11-01")), lwd=2)
+```
+From this plot, it can be noted that two companies had a decreasing trend in
+stock prices from September 1997 to November 1997: Boeing and Procter & Gamble.  
+</br>
+
+##### 3.4 In the last two years of this time period (2004 & 2005), which stock seems to perform the best?
+From the plot, it is seen that Boeing is steadily increasing from 2004 to
+beginning of 2006.  
+</br>
+
+#### Monthly Trends
+Lastly, let's see if stocks tend to be higher or lower during certain months. 
+Use the `tapply` command to calculate the mean stock price of IBM, sorted by 
+months. To sort by months, use `months(IBM$Date)` as the second argument of 
+`tapply` function. 
+
+For IBM, compare the monthly averages to overall average of the stock price.  
+</br>
+
+##### 4.1 In which months has IBM historically had a higher stock price (on average)?
+```{r}
+mean(IBM$StockPrice)
+tapply(IBM$StockPrice, months(IBM$Date), mean)
+```
+Here it can is seen, that the price has been historically been higher than the
+average from January-May, and lower than average for the remaining months.  
+</br>
+
+##### 4.2 General Electric and Coca-Cola both have their highest average stock price in which month?
+```{r}
+tapply(GE$StockPrice, months(GE$Date), mean)
+tapply(CocaCola$StockPrice, months(CocaCola$Date), mean)
+```
+General Electric has an average stock price of 64.48 in April, which is higher
+than any other month. Coca-Cola has an average stock price of 62.9 in April, 
+which is higher than any other month.  
+</br>
+
+##### 4.3 For the months of Dec/Jan, in which month are the average stock prices lower?
+```{r}
+tapply(IBM$StockPrice, months(IBM$Date), mean)
+tapply(Boeing$StockPrice, months(Boeing$Date), mean)
+tapply(ProcterGamble$StockPrice, months(ProcterGamble$Date), mean)
+tapply(CocaCola$StockPrice, months(CocaCola$Date), mean)
+tapply(GE$StockPrice, months(GE$Date), mean)
+```
+It is a trend that the average price of the stock has been higher in January
+than December. The caveat here is that one really good or bad year could skew
+the average to show a trend that is not really there in general.  
+</br>
+
+*End of Homework Assignment*

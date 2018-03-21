@@ -1,0 +1,342 @@
+# An Analytical Detective
+##### *Unit-1: Introduction to Analytics*
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
+```
+</br>
+
+Crime is an international concern, but it is documented and handled in very 
+different ways in different countries. In the United States, violent crimes and
+property crimes are recorded by the Federal Bureau of Investigation (FBI).
+Additionally, each city documents crime and some cities release data regarding
+crime rates. The city of Chicago, Illinois releases crime data from 2001 onward
+[online](https://goo.gl/N1fQfF).
+
+Chicago is the third most populous city in the United States, with a population 
+of over 2.7 million people. 
+
+There are two main types of crimes: violent crimes, and property crimes. In 
+this problem, we'll focus on one specific type of property crime, called "motor 
+vehicle theft" (sometimes referred to as grand theft auto). This is the act of 
+stealing, or attempting to steal, a car. In this problem, we'll use some basic 
+data analysis in R to understand the motor vehicle thefts in Chicago.
+
+Please download the file [mvtWeek1.csv](http://bit.ly/2p4175k) for this problem 
+(do not open this file in any spreadsheet software before completing this 
+problem because it might change the format of the Date field). Here is a list 
+of descriptions of variables:
+
+- `ID`: a unique identifier for each observation.
+
+- `Date`: the date the crime occurred.
+
+- `LocationDescription`: the location where the crime occurred.
+
+- `Arrest`: whether or not an arrest was made for the crime (TRUE if an 
+arrest was made, and FALSE if an arrest was not made)
+
+- `Domestic`: whether or not the crime was a domestic crime, meaning that it 
+was committed against a family member (TRUE if it was domestic, and FALSE if it 
+was not domestic)
+
+- `Beat`: the area, or "beat" in which the crime occurred. This is the 
+smallest regional division defined by the Chicago police department.
+
+- `District`: the police district in which the crime occurred. Each district 
+is composed of many beats, and are defined by the Chicago Police Department.
+
+- `CommunityArea`: the community area in which the crime occurred. Since the 
+1920s, Chicago has been divided into what are called "community areas," of 
+which there are now 77. The community areas were devised in an attempt to 
+create socially homogeneous regions.
+
+- `Year`: the year in which the crime occurred.
+
+- `Latitude`: the latitude of the location at which the crime occurred.
+
+- `Longitude`: the longitude of the location at which the crime occurred.
+
+----------
+
+#### Loading the Data
+Read the dataset [mvtWeek1.csv](http://bit.ly/2p4175k) into R, using the 
+`read.csv` function, and call the data frame "mvt". Remember to navigate to the 
+directory on your computer containing the file `mvtWeek1.csv` first. It may 
+take a few minutes to read in the data, since it is pretty large. Then, use the
+`str` and `summary` functions to answer the following questions.
+  
+```{R}
+mvt = read.csv("mvtWeek1.csv")
+```
+</br>
+
+##### 1.1 How many rows of data (observations) are in this dataset?
+```{R}
+str(mvt)
+```
+The first row of the output says that there are: 191641 observations.  
+</br>
+   
+##### 1.2 How many variables are there in this dataset?  
+The first row of the `str` output says that there are: 11 variables.  
+</br>
+
+##### 1.3 Using the "max" function, what is the maximum value of the variable "ID"?
+```{R}
+max(mvt$ID)
+```
+</br>
+
+##### 1.4 What is the minimum value of the variable "Beat"?
+```{R}
+min(mvt$Beat)
+```
+</br>
+
+##### 1.5 How many observations have value TRUE in the Arrest variable (number of crimes for which an arrest was made)?
+```{R}
+summary(mvt)
+```
+On inspecting the `summary` output, it can be seen that 15,536 observations 
+fall under the category TRUE for the variable Arrest.  
+</br>
+
+##### 1.6 How many observations have value a LocationDescription value of ALLEY?
+From the `summary` output, 2308 values fall under the category. Alternatively,
+`table(mvt$LocationDescription)` can be used.  
+</br>
+
+#### Understanding Dates in R
+In many datasets, like this one, you have a date field. Unfortunately, R does 
+not automatically recognize entries that look like dates. We need to use a 
+function in R to extract the date and time. Take a look at the first entry of 
+Date (remember to use square brackets when looking at a certain entry of a 
+variable).  
+</br>
+
+##### 2.1 In what format are the entries in the variable Date?
+```{r}
+mvt$Date[1]
+```
+The above output suggests that the date format is Month/Day/Year Hour:Minute.  
+</br>
+
+##### 2.2 Converting to Date object.
+Now, let's convert these characters into a Date object in R.
+```{r}
+DateConvert = as.Date(strptime(mvt$Date, "%m/%d/%y %H:%M"))
+```
+This converts the variable "Date" into a Date object in R. Take a look at the 
+variable DateConvert using the summary function.
+
+**What is the month and year of the median date in our dataset?**   
+```{r}
+summary(DateConvert)
+```
+The median date is May 2006 (2006-05-21).  
+</br>
+
+##### 2.3 In which month did the fewest motor vehicle thefts occur?
+Now, let's extract the month and the day of the week, and add these variables 
+to our data frame mvt. We can do this with two simple functions. 
+Type the following commands in R:
+```{r}
+mvt$Month = months(DateConvert)
+mvt$Weekday = weekdays(DateConvert)
+```
+
+This creates two new variables in our data frame, Month and Weekday, and sets 
+them equal to the month and weekday values that we can extract from the Date 
+object. Lastly, replace the old Date variable with DateConvert by typing:
+
+```{r}
+mvt$Date = DateConvert
+```
+
+*Using the table command, answer the following questions.*
+
+**In which month did the fewest motor vehicle thefts occur?**
+```{r}
+sort(table(mvt$Month))
+```
+</br>
+
+##### 2.4 On which weekday did the most motor vehicle thefts occur?
+```{r}
+table(mvt$Weekday)
+```
+</br>
+
+##### 2.5 Which month has the largest number of motor vehicle thefts for which an arrest was made?
+Each observation in the dataset represent a motor vehicle theft, and the Arrest
+variable indicates whether an arrest was later made on this theft. 
+```{r}
+table(mvt$Arrest, mvt$Month)
+```
+The largest number of observations with Arrest=TRUE are for January.  
+</br>
+
+#### Visualizing Crime Trends
+Now, let's make some plots to help us better understand how crime has changed
+over time in Chicago. Throughout this problem, and in general, you can save 
+your plot to a file. For more information, [this website](http://bit.ly/2FDcrLQ)
+very clearly explains the process. 
+
+First, let's make a histogram of the variable Date. We'll add an extra
+argument, to specify the number of bars we want in our histogram. In your R
+console, type
+
+```{r}
+hist(mvt$Date, breaks=100)
+```
+
+*Looking at the histogram, answer the following questions.*
+
+**Does it look like the crime increases or decreases from 2002-2012?**
+Decreases.
+</br>
+
+**Does it look like the crime increases or decreases from 2005-2008?**
+Decreases.
+</br>
+
+**Does it look like the crime increases or decreases from 2009-2011?**
+Increases.  
+</br>
+
+##### 3.2 Using box-plots
+Now, let's see how arrests have changed over time. Create a boxplot of the 
+variable "Date," sorted by the variable "Arrest" (if you are not familiar with 
+boxplots and would like to learn more, check out 
+[this tutorial](http://msenux.redwoods.edu/math/R/boxplot.php)). In a boxplot, 
+the bold horizontal line is the median value of the data, the box shows the 
+range of values between the first quartile and third quartile, and the whiskers 
+(the dotted lines extending outside the box) show the minimum and maximum 
+values, excluding any outliers (which are plotted as circles). Outliers are 
+defined by first computing the difference between the first and third quartile 
+values, or the height of the box. This number is called the Inter-Quartile 
+Range (IQR). Any point that is greater than the third quartile plus the IQR or 
+less than the first quartile minus the IQR is considered an outlier.
+
+**Does it look like there were more crimes for which arrests were made in the** 
+**first half of the time period or the second half of the time period?**
+(Note that the time period is from 2001 to 2012, so the middle of the 
+time period is the beginning of 2007.)
+
+```{r}
+boxplot(mvt$Date ~ mvt$Arrest)
+```
+
+From the boxplot, it can be seen that for Arrest=TRUE, it is skewed towards
+the bottom of the plot, meaning that there were more crimes for which arrests
+were made in the first half of the time period.  
+</br>
+
+##### 3.3 For what proportion of motor vehicle thefts in 2001 was an arrest made?
+Note: in this question and many others in the course, we are asking for an 
+answer as a proportion. Therefore, your answer should take a value between 
+0 and 1.
+
+```{r}
+table(mvt$Arrest, mvt$Year)
+```
+The required proportion is 2152/(2152+18157) = 0.1041173  
+</br>
+
+##### 3.4 For what proportion of motor vehicle thefts in 2007 was an arrest made?
+The required proportion is 1212/(1212+13068) = 0.08487395  
+</br>
+
+##### 3.5 For what proportion of motor vehicle thefts in 2012 was an arrest made?
+The required proportion is 550/(550+13542) = 0.03902924  
+</br>
+
+Since there may still be open investigations for recent crimes, this could 
+explain the trend we are seeing in the data. There could also be other factors 
+at play, and this trend should be investigated further. However, since we don't 
+know when the arrests were actually made, our detective work in this area has 
+reached a dead end.  
+</br>
+
+#### Popular Locations
+Analyzing this data could be useful to the Chicago Police Department when 
+deciding where to allocate resources. If they want to increase the number of 
+arrests that are made for motor vehicle thefts, where should they focus their 
+efforts?
+
+We want to find the top five locations where motor vehicle thefts occur. If you 
+create a table of the LocationDescription variable, it is unfortunately very 
+hard to read since there are 78 different locations in the data set. By using 
+the sort function, we can view this same table, but sorted by the number of 
+observations in each category. In your R console, type: 
+`sort(table(mvt$LocationDescription))`  
+</br>
+
+##### 4.1 Which locations are the top five locations for motor vehcle thefts?
+```{r}
+sort(table(mvt$LocationDescription), decreasing = TRUE)[1:6]
+```
+</br>
+
+##### 4.2 Analyse Top-5 Locations
+Create a subset of your data, only taking observations for which the theft 
+happened in one of these five locations, and call this new data set "Top5". 
+To do this, you can use the | symbol. In the lecture, we used the & symbol to 
+use two criteria to make a subset of the data. To only take observations that 
+have a certain value in one variable or the other, the | character can be used 
+in place of the & symbol. This is also called a logical "or" operation.
+
+Alternately, you could create five different subsets, and then merge them 
+together into one data frame using rbind.
+
+**How many observations are in Top5?**
+```{r}
+Top5 = subset(mvt, LocationDescription=="STREET" |
+                LocationDescription=="PARKING LOT/GARAGE(NON.RESID.)" | 
+                LocationDescription=="ALLEY" | 
+                LocationDescription=="GAS STATION" | 
+                LocationDescription=="DRIVEWAY - RESIDENTIAL")
+
+str(Top5)
+```
+</br>
+
+##### 4.3 Which of these locations has a much higher arrest rate than the other locations?
+R will remember the other categories of the LocationDescription variable from 
+the original dataset, so running `table(Top5$LocationDescription)` will have a 
+lot of unnecessary output. To make our tables a bit nicer to read, we can 
+refresh this factor variable. In your R console, type:
+
+```{r}
+Top5$LocationDescription = factor(Top5$LocationDescription)
+```
+
+If you run the str function again on Top5, you should see that 
+LocationDescription now only has 5 values, as we expect.
+
+Use the Top5 data frame to answer the remaining questions.
+
+```{r}
+table(Top5$LocationDescription, Top5$Arrest)
+```
+On inspecting the percentage of arrests, it is found that *Gas Station* has the 
+highest percentage of arrests, with over *20%* of motor vehicle thefts 
+resulting in an arrest.  
+</br>  
+
+##### 4.4 On which day of the week do the most motor vehicle thefts at gas stations happen?
+```{r}
+table(Top5$LocationDescription, Top5$Weekday)
+```
+Saturday.  
+</br>
+
+##### 4.5 On which day of the week fo the fewest motor vehicle thefts in residential driveways happen?
+```{r}
+table(Top5$LocationDescription, Top5$Weekday)
+```
+Saturday.  
+</br>  
+
+*End of Homework Assignment*
