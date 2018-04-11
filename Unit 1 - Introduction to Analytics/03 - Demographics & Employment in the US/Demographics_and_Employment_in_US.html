@@ -181,7 +181,7 @@ $(document).ready(function () {
 <pre><code>## 
 ##      Citizen, Native Citizen, Naturalized          Non-Citizen 
 ##               116639                 7073                 7590</code></pre>
-<p>(12712/131302)=0.942<br />
+<p>(123712/131302)=0.942<br />
 </br></p>
 </div>
 <div id="for-which-races-are-there-at-least-250-interviewees-are-of-hispanic-enthicity" class="section level5">
@@ -202,8 +202,8 @@ $(document).ready(function () {
 </div>
 <div id="evaluating-missing-values" class="section level4">
 <h4>Evaluating Missing Values</h4>
-<div id="which-variables-have-at-least-one-intervieww-with-a-missing-na-value" class="section level5">
-<h5>2.1 Which variables have at least one intervieww with a missing (NA) value?</h5>
+<div id="which-variables-have-at-least-one-interview-with-a-missing-na-value" class="section level5">
+<h5>2.1 Which variables have at least one interview with a missing (NA) value?</h5>
 <pre class="r"><code>summary(CPS)</code></pre>
 <pre><code>##  PeopleInHousehold       Region               State       MetroAreaCode  
 ##  Min.   : 1.000    Midwest  :30684   California  :11570   Min.   :10420  
@@ -245,7 +245,7 @@ $(document).ready(function () {
 ##  Unemployed        : 4203   Leisure and hospitality           : 6364  
 ##  NA's              :25789   (Other)                           :21618  
 ##                             NA's                              :65060</code></pre>
-<p></br></p>
+<p>The relevant variables can be noted from the above output. </br></p>
 </div>
 <div id="which-is-the-most-accurate-regarding-missing-values" class="section level5">
 <h5>2.2 Which is the most accurate regarding missing values?</h5>
@@ -453,6 +453,8 @@ CountryMap &lt;- read.csv(&quot;CountryCodes.csv&quot;)</code></pre>
 ##  $ EmploymentStatus  : Factor w/ 5 levels &quot;Disabled&quot;,&quot;Employed&quot;,..: NA NA 4 3 1 2 3 NA 2 2 ...
 ##  $ Industry          : Factor w/ 14 levels &quot;Agriculture, forestry, fishing, and hunting&quot;,..: NA NA NA NA NA 7 NA NA 4 13 ...
 ##  $ MetroArea         : Factor w/ 271 levels &quot;Akron, OH&quot;,&quot;Albany-Schenectady-Troy, NY&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...</code></pre>
+<p><code>MetroArea</code> was added.<br />
+</br></p>
 <p><strong>How many interviewees have a missing value for the new metropolitan area</strong> <strong>variable? Note that all of these interviewees would have been removed from</strong> <strong>the merged data frame if we did not include the all.x=TRUE parameter.</strong></p>
 <pre class="r"><code>table(is.na(CPS$MetroArea))['TRUE']</code></pre>
 <pre><code>##  TRUE 
@@ -600,7 +602,7 @@ CountryMap &lt;- read.csv(&quot;CountryCodes.csv&quot;)</code></pre>
 ##  China        :   581  
 ##  (Other)      :  9952  
 ##  NA's         :   176</code></pre>
-<p></br></p>
+<p>The answer can be noted from the above output. </br></p>
 </div>
 <div id="among-all-interviewees-born-outside-of-north-america-which-country-was-the-most-common-place-of-birth" class="section level5">
 <h5>4.2 Among all interviewees born outside of North America, which country was the most common place of birth?</h5>

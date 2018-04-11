@@ -175,8 +175,8 @@ lines(ProcterGamble$Date, ProcterGamble$StockPrice, col="blue")
 abline(v=as.Date(c("1983-06-01")), lwd=2)
 ```
 
-From the plot, it can be noted that Coca-Cola has a slightly upward trend 
-around 1983 but is generally lower than the Proctor Gamble stock.  
+From the plot, it can be noted that *Coca-Cola* has a slightly upward trend 
+around 1983. It also generally has lower values than the Proctor Gamble stock.  
 </br>
 
 #### Visualizing Stock Dynamics: 1995-2005
@@ -272,7 +272,7 @@ tapply(GE$StockPrice, months(GE$Date), mean)
 tapply(CocaCola$StockPrice, months(CocaCola$Date), mean)
 ```
 General Electric has an average stock price of 64.48 in April, which is higher
-than any other month. Coca-Cola has an average stock price of 62.9 in April, 
+than any other month. Coca-Cola has an average stock price of 62.68 in April, 
 which is higher than any other month.  
 </br>
 

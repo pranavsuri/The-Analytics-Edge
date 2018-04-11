@@ -102,7 +102,7 @@ sort(table(CPS$State), decreasing=TRUE)[1]
 ```{r}
 table(CPS$Citizenship)
 ```
-(12712/131302)=0.942  
+(123712/131302)=0.942  
 </br>
 
 ##### 1.5 For which races are there at least 250 interviewees are of Hispanic enthicity?
@@ -118,10 +118,11 @@ American Indian, Black, Multiracial and White.
 
 #### Evaluating Missing Values
 
-##### 2.1 Which variables have at least one intervieww with a missing (NA) value?
+##### 2.1 Which variables have at least one interview with a missing (NA) value?
 ```{r}
 summary(CPS)
 ```
+The relevant variables can be noted from the above output.
 </br>
 
 ##### 2.2 Which is the most accurate regarding missing values?
@@ -258,6 +259,8 @@ outer join instead of an inner join).
 ```{r}
 str(CPS)
 ```
+`MetroArea` was added.  
+</br>
 
 **How many interviewees have a missing value for the new metropolitan area**
 **variable? Note that all of these interviewees would have been removed from**
@@ -337,6 +340,7 @@ Country
 ```{r}
 summary(CPS)
 ```
+The answer can be noted from the above output.
 </br>
 
 ##### 4.2 Among all interviewees born outside of North America, which country was the most common place of birth?
