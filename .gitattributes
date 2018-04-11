@@ -1,0 +1,8 @@
+# .gitattributes for 'The Analytics Edge'.
+# Repository consists primarily of R scripts.
+
+# Ignore all file-types except R.
+
+* linguist-vendored
+*.R linguist-vendored=false
+*.rmd linguist-vendored=false
